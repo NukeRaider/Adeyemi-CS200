@@ -5,7 +5,8 @@
   <title>Galaxy Classifier</title>
   <style>
   body {
-    font-family: sans-serif;
+    font-family: courier-new, monospace;
+    background-color: #282c34;
     color: white;
     text-align: center;
     padding: 30px;
@@ -86,6 +87,84 @@
           <strong>Confidence:</strong> ${(data.probability * 100).toFixed(2)}%
         `;
       }
+    });
+  </script>
+  <div class="result" id="result"></div>
+
+  <!-- Feedback Section -->
+  <div id="feedback" style="display: none; margin-top: 20px;">
+    <p>Was the prediction correct?</p>
+    <button id="yes-button">Yes</button>
+    <button id="no-button">No</button>
+  </div>
+  
+  <!-- Counters -->
+  <div style="margin-top: 20px;">
+    <p>Correct Predictions: <span id="correct-counter">0</span></p>
+    <p>Incorrect Predictions: <span id="incorrect-counter">0</span></p>
+  </div>
+  
+  <script>
+    const resultDiv = document.getElementById('result');
+    const feedbackDiv = document.getElementById('feedback');
+    const correctCounter = document.getElementById('correct-counter');
+    const incorrectCounter = document.getElementById('incorrect-counter');
+    const yesButton = document.getElementById('yes-button');
+    const noButton = document.getElementById('no-button');
+  
+    let correctCount = 0;
+    let incorrectCount = 0;
+  
+    imageInput.addEventListener('change', () => {
+      const file = imageInput.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          preview.src = e.target.result;
+          preview.style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+      } else {
+        preview.style.display = 'none';
+      }
+    });
+  
+    document.getElementById('upload-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+  
+      const formData = new FormData();
+      formData.append('image', imageInput.files[0]);
+  
+      const response = await fetch('/predict', {
+        method: 'POST',
+        body: formData
+      });
+  
+      const data = await response.json();
+  
+      if (data.error) {
+        resultDiv.textContent = 'Error: ' + data.error;
+        feedbackDiv.style.display = 'none';
+      } else {
+        resultDiv.innerHTML = `
+          <strong>Predicted Class:</strong> ${data.class_name} <br>
+          <strong>Confidence:</strong> ${(data.probability * 100).toFixed(2)}%
+        `;
+        feedbackDiv.style.display = 'block';
+      }
+    });
+  
+    // Handle feedback buttons
+    yesButton.addEventListener('click', () => {
+      correctCount++;
+      correctCounter.textContent = correctCount;
+      feedbackDiv.style.display = 'none';
+    });
+  
+    noButton.addEventListener('click', () => {
+      incorrectCount++;
+      incorrectCounter.textContent = incorrectCount;
+      feedbackDiv.style.display = 'none';
     });
   </script>
 </body>
