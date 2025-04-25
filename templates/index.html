@@ -11,8 +11,7 @@
     text-align: center;
     padding: 30px;
     
-    /* ✨ Background image settings */
-    background-image: url('static/bg.jpg'); /* replace with your image path or URL */
+    background-image: url('static/bg.jpg');
     background-size: cover;
     background-repeat: no-repeat;
   }
@@ -91,14 +90,14 @@
   </script>
   <div class="result" id="result"></div>
 
-  <!-- Feedback Section -->
+
   <div id="feedback" style="display: none; margin-top: 20px;">
     <p>Was the prediction correct?</p>
     <button id="yes-button">Yes</button>
     <button id="no-button">No</button>
   </div>
   
-  <!-- Counters -->
+
   <div style="margin-top: 20px;">
     <p>Correct Predictions: <span id="correct-counter">0</span></p>
     <p>Incorrect Predictions: <span id="incorrect-counter">0</span></p>
@@ -154,7 +153,6 @@
       }
     });
   
-    // Handle feedback buttons
     yesButton.addEventListener('click', () => {
       correctCount++;
       correctCounter.textContent = correctCount;
